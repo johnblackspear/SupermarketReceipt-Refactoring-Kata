@@ -23,10 +23,11 @@ describe('Supermarket', function () {
 
     const toothPaste: Product = new Product("Toothpaste", ProductUnit.Each);
     const toothPastePrice: number = 1.79;
-    
+
     it('applies a 10% discount', function () {
         const discountPercentage = 10;
         const expectedPrice = ricePrice * (1 - discountPercentage / 100);
+
         const catalog: SupermarketCatalog = new FakeCatalog();
         const teller: Teller = new Teller(catalog);
         const cart: ShoppingCart = new ShoppingCart();
@@ -43,6 +44,7 @@ describe('Supermarket', function () {
     it('applies a 20% discount', function () {
         const discountPercentage = 20;
         const expectedPrice = applePrice * (1 - discountPercentage / 100);
+
         const catalog: SupermarketCatalog = new FakeCatalog();
         const teller: Teller = new Teller(catalog);
         const cart: ShoppingCart = new ShoppingCart();
@@ -56,8 +58,32 @@ describe('Supermarket', function () {
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
 
+    it('applies all discounts to a complex cart', function () {
+        const totalToothpastePrice = 7.49 + (2 * toothPastePrice);
+        const discountPercentage = 20;
+        const totalApplePrice = 2 * applePrice * (1 - discountPercentage / 100);
+        const expectedPrice = totalToothpastePrice + totalApplePrice;
+
+        const catalog: SupermarketCatalog = new FakeCatalog();
+        const teller: Teller = new Teller(catalog);
+        const cart: ShoppingCart = new ShoppingCart();
+
+        catalog.addProduct(toothPaste, toothPastePrice);
+        catalog.addProduct(apples, applePrice);
+        teller.addSpecialOffer(SpecialOfferType.FiveForAmount, toothPaste, 7.49);
+        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, apples, discountPercentage);
+
+        cart.addItemQuantity(toothPaste, 7);
+        cart.addItemQuantity(apples, 2);
+        const receipt: Receipt = teller.checksOutArticlesFrom(cart);
+
+        expect(receipt).toMatchSnapshot();
+        expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
+    });
+
     it('applies a Five for Amount discount', function () {
         const expectedPrice = 7.49;
+
         const catalog: SupermarketCatalog = new FakeCatalog();
         const teller: Teller = new Teller(catalog);
         const cart: ShoppingCart = new ShoppingCart();
@@ -73,6 +99,7 @@ describe('Supermarket', function () {
 
     it('applies a Three for Two discount', function () {
         const expectedPrice = toothbrushPrice * 2;
+
         const catalog: SupermarketCatalog = new FakeCatalog();
         const teller: Teller = new Teller(catalog);
         const cart: ShoppingCart = new ShoppingCart();
@@ -88,6 +115,7 @@ describe('Supermarket', function () {
 
     it('applies a Two for Amount discount', function () {
         const expectedPrice = 0.99;
+
         const catalog: SupermarketCatalog = new FakeCatalog();
         const teller: Teller = new Teller(catalog);
         const cart: ShoppingCart = new ShoppingCart();
