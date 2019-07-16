@@ -19,7 +19,8 @@ export class ShoppingCart {
 
     handleOffers(receipt: Receipt, offers: ProductNameToSpecialOfferMap, catalog: SupermarketCatalog): void {
         for (const productName in this.cartContent) {
-            const product = this.cartContent[productName].product;
+            const productAndQuantityTuple = this.cartContent[productName];
+            const product = productAndQuantityTuple.product;
             const quantity: number = this.getProductQuantity(productName);
             const productSpecificOffer: Offer = offers[productName];
 
@@ -28,7 +29,7 @@ export class ShoppingCart {
                 const unitPrice: number = catalog.getUnitPrice(product);
                 let discount: Discount | null = null;
 
-                discount = this.twoForAmount(productSpecificOffer, product, quantity, unitPrice, discount);
+                discount = this.twoForAmount(productSpecificOffer, productAndQuantityTuple, unitPrice, discount);
                 discount = this.threeForTwo(productSpecificOffer, product, quantity, unitPrice, discount);
                 discount = this.percentageDiscount(productSpecificOffer, product, quantity, unitPrice, discount);
                 discount = this.fiveForAmount(productSpecificOffer, product, quantity, unitPrice, discount);
@@ -45,12 +46,12 @@ export class ShoppingCart {
         return this.cartContent[productName].quantity;
     }
 
-    private twoForAmount(productOffer: Offer, product: Product, quantity: number, unitPrice: number, discount: Discount | null) {
-        if (productOffer.offerType == SpecialOfferType.TwoForAmount && quantity >= 2) {
+    private twoForAmount(productOffer: Offer, productAndQuantityTuple: ProductAndQuantityTuple, unitPrice: number, discount: Discount | null) {
+        if (productOffer.offerType == SpecialOfferType.TwoForAmount && productAndQuantityTuple.quantity >= 2) {
             const x: number = 2;
-            const total = productOffer.argument * Math.floor(quantity / x) + quantity % 2 * unitPrice;
-            const discountN = unitPrice * quantity - total;
-            discount = new Discount(product, "2 for " + productOffer.argument, discountN);
+            const total = productOffer.argument * Math.floor(productAndQuantityTuple.quantity / x) + productAndQuantityTuple.quantity % 2 * unitPrice;
+            const discountN = unitPrice * productAndQuantityTuple.quantity - total;
+            discount = new Discount(productAndQuantityTuple.product, "2 for " + productOffer.argument, discountN);
         }
         return discount;
     }
