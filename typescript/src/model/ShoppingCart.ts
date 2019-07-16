@@ -40,23 +40,10 @@ export class ShoppingCart {
                 const productSpecificOffer: Offer = offers[productName];
                 const unitPrice: number = catalog.getUnitPrice(product);
                 let discount: Discount | null = null;
-                let x = 1;
-                if (productSpecificOffer.offerType == SpecialOfferType.ThreeForTwo) {
-                    x = 3;
-
-                }
-                if (productSpecificOffer.offerType == SpecialOfferType.TwoForAmount) {
-                    x = 2;
-
-                }
-                if (productSpecificOffer.offerType == SpecialOfferType.FiveForAmount) {
-                    x = 5;
-                }
-                const numberOfXs = Math.floor(quantity / x);
-                discount = this.twoForAmount(quantity, productSpecificOffer, x, unitPrice, discount, product);
-                discount = this.threeForTwo(productSpecificOffer, quantity, unitPrice, numberOfXs, discount, product);
+                discount = this.twoForAmount(quantity, productSpecificOffer, unitPrice, discount, product);
+                discount = this.threeForTwo(productSpecificOffer, quantity, unitPrice, discount, product);
                 discount = this.percentageDiscount(productSpecificOffer, discount, product, quantity, unitPrice);
-                discount = this.fiveForAmount(productSpecificOffer, quantity, unitPrice, numberOfXs, discount, product, x);
+                discount = this.fiveForAmount(productSpecificOffer, quantity, unitPrice, discount, product);
 
                 if (discount != null) {
                     receipt.addDiscount(discount);
@@ -66,8 +53,9 @@ export class ShoppingCart {
         }
     }
 
-    private twoForAmount(quantity: number, offer: Offer, x: number, unitPrice: number, discount: Discount | null, product: Product) {
-        if (quantity >= 2) {
+    private twoForAmount(quantity: number, offer: Offer, unitPrice: number, discount: Discount | null, product: Product) {
+        if (offer.offerType == SpecialOfferType.TwoForAmount && quantity >= 2) {
+            const x: number = 2;
             const total = offer.argument * Math.floor(quantity / x) + quantity % 2 * unitPrice;
             const discountN = unitPrice * quantity - total;
             discount = new Discount(product, "2 for " + offer.argument, discountN);
@@ -75,8 +63,10 @@ export class ShoppingCart {
         return discount;
     }
 
-    private fiveForAmount(offer: Offer, quantity: number, unitPrice: number, numberOfXs: number, discount: Discount | null, product: Product, x: number) {
+    private fiveForAmount(offer: Offer, quantity: number, unitPrice: number, discount: Discount | null, product: Product) {
         if (offer.offerType == SpecialOfferType.FiveForAmount && quantity >= 5) {
+            const x: number = 5;
+            const numberOfXs = Math.floor(quantity / x);
             const discountTotal = unitPrice * quantity - (offer.argument * numberOfXs + quantity % 5 * unitPrice);
             discount = new Discount(product, x + " for " + offer.argument, discountTotal);
         }
@@ -90,8 +80,10 @@ export class ShoppingCart {
         return discount;
     }
 
-    private threeForTwo(offer: Offer, quantity: number, unitPrice: number, numberOfXs: number, discount: Discount | null, product: Product) {
+    private threeForTwo(offer: Offer, quantity: number, unitPrice: number, discount: Discount | null, product: Product) {
         if (offer.offerType == SpecialOfferType.ThreeForTwo && quantity > 2) {
+            const x: number = 3;
+            const numberOfXs = Math.floor(quantity / x);
             const discountAmount = quantity * unitPrice - ((numberOfXs * 2 * unitPrice) + quantity % 3 * unitPrice);
             discount = new Discount(product, "3 for 2", discountAmount);
         }
