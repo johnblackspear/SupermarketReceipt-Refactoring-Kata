@@ -58,9 +58,7 @@ export class ShoppingCart {
                 }
                 const numberOfXs = Math.floor(quantity / x);
                 discount = this.threeForTwo(offer, quantity, unitPrice, numberOfXs, discount, product);
-                if (offer.offerType == SpecialOfferType.PercentageDiscount) {
-                    discount = new Discount(product, offer.argument + "% off", quantity * unitPrice * offer.argument / 100.0);
-                }
+                discount = this.percentageDiscount(offer, discount, product, quantity, unitPrice);
                 if (offer.offerType == SpecialOfferType.FiveForAmount && quantity >= 5) {
                     const discountTotal = unitPrice * quantity - (offer.argument * numberOfXs + quantity % 5 * unitPrice);
                     discount = new Discount(product, x + " for " + offer.argument, discountTotal);
@@ -70,6 +68,13 @@ export class ShoppingCart {
             }
 
         }
+    }
+
+    private percentageDiscount(offer: Offer, discount: Discount | null, product: Product, quantity: number, unitPrice: number) {
+        if (offer.offerType == SpecialOfferType.PercentageDiscount) {
+            discount = new Discount(product, offer.argument + "% off", quantity * unitPrice * offer.argument / 100.0);
+        }
+        return discount;
     }
 
     private threeForTwo(offer: Offer, quantity: number, unitPrice: number, numberOfXs: number, discount: Discount | null, product: Product) {
