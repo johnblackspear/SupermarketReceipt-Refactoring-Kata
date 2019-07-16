@@ -33,9 +33,8 @@ export class ShoppingCart {
 
     handleOffers(receipt: Receipt, offers: ProductNameToSpecialOfferMap, catalog: SupermarketCatalog): void {
         for (const productName in this.productQuantities()) {
-            const productQuantity = this.stock[productName];
-            const product = productQuantity.product;
-            const quantity: number = this.getQuantity(productName);
+            const product = this.stock[productName].product;
+            const quantity: number = this.getProductQuantity(productName);
             const productSpecificOffer: Offer = offers[productName];
 
             if (productSpecificOffer) {
@@ -56,7 +55,7 @@ export class ShoppingCart {
         }
     }
 
-    private getQuantity(productName: string) {
+    private getProductQuantity(productName: string) {
         return this.stock[productName].quantity;
     }
 
