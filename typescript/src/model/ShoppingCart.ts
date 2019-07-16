@@ -11,7 +11,6 @@ export type ProductNameToSpecialOfferMap = { [productName: string]: Offer };
 
 export class ShoppingCart {
 
-    private readonly items: ProductAndQuantityTuple[] = [];
     stock: ProductQuantities = {};
 
     public addItemQuantity(product: Product, quantity: number): void {
