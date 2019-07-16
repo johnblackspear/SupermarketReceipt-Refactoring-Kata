@@ -6,15 +6,9 @@ import {ShoppingCart} from "../src/model/ShoppingCart"
 import {Teller} from "../src/model/Teller"
 import {SpecialOfferType} from "../src/model/SpecialOfferType"
 import {ProductUnit} from "../src/model/ProductUnit"
-const approvals = require('approvals')
 
-type Approvals = {
-    verify: (s: string) => void
-    verifyAsJSON: (o: Object) => void
-}
 describe('Supermarket', function () {
 
-    approvals.mocha()
     it('TODO decide what to specify', function (this: any) {
 
         const catalog: SupermarketCatalog = new FakeCatalog();
@@ -31,8 +25,7 @@ describe('Supermarket', function () {
 
         const receipt: Receipt = teller.checksOutArticlesFrom(cart);
 
-        // Todo: complete this test
-        this.verifyAsJSON({})
+        expect(true).toBe(true);
     });
 
 });
