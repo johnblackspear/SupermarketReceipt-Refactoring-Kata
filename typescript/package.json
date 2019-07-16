@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "jest",
-        "test:watch": "npm run test -- --watchAll --no-cache",
+        "test:watch": "npm run test -- --watchAll --no-cache --coverage",
         "compile": "tsc"
     },
     "author": "Johan Martinsson",
