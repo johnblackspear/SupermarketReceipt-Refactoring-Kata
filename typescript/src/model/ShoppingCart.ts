@@ -8,7 +8,7 @@ import {Offer} from "./Offer"
 import {SpecialOfferType} from "./SpecialOfferType"
 
 type ProductQuantities = { [productName: string]: ProductQuantity }
-export type OffersByProduct = { [productName: string]: Offer };
+export type ProductNameToSpecialOfferMap = { [productName: string]: Offer };
 
 export class ShoppingCart {
 
@@ -31,11 +31,11 @@ export class ShoppingCart {
         this.stock[product.name] = productQuantity;
     }
 
-    handleOffers(receipt: Receipt, offers: OffersByProduct, catalog: SupermarketCatalog): void {
+    handleOffers(receipt: Receipt, offers: ProductNameToSpecialOfferMap, catalog: SupermarketCatalog): void {
         for (const productName in this.productQuantities()) {
             const productQuantity = this.stock[productName];
             const product = productQuantity.product;
-            const quantity: number = this.stock[productName].quantity;
+            const quantity: number = this.getQuantity(productName);
             const productSpecificOffer: Offer = offers[productName];
 
             if (productSpecificOffer) {
@@ -54,6 +54,10 @@ export class ShoppingCart {
             }
 
         }
+    }
+
+    private getQuantity(productName: string) {
+        return this.stock[productName].quantity;
     }
 
     private twoForAmount(productOffer: Offer, product: Product, quantity: number, unitPrice: number, discount: Discount | null) {

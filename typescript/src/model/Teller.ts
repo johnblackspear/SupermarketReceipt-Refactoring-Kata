@@ -1,5 +1,5 @@
 import {SupermarketCatalog} from "./SupermarketCatalog"
-import {OffersByProduct, ShoppingCart} from "./ShoppingCart"
+import {ProductNameToSpecialOfferMap, ShoppingCart} from "./ShoppingCart"
 import {Product} from "./Product"
 import {Receipt} from "./Receipt"
 import {Offer} from "./Offer"
@@ -7,7 +7,7 @@ import {SpecialOfferType} from "./SpecialOfferType"
 
 export class Teller {
 
-    private offers: OffersByProduct = {};
+    private offers: ProductNameToSpecialOfferMap = {};
 
     public constructor(private readonly catalog: SupermarketCatalog ) {
     }
