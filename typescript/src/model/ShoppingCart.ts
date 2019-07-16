@@ -28,7 +28,6 @@ export class ShoppingCart {
     public addItemQuantity(product: Product, quantity: number): void {
         let productQuantity = new ProductQuantity(product, quantity);
         this.items.push(productQuantity);
-        let currentQuantity = this._productQuantities[product.name];
         this._productQuantities[product.name] = productQuantity;
 
     }
