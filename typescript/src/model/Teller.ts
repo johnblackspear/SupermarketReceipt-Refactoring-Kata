@@ -18,7 +18,7 @@ export class Teller {
 
     public checksOutArticlesFrom(theCart: ShoppingCart): Receipt {
         const receipt = new Receipt();
-        const productQuantities = theCart.stock;
+        const productQuantities = theCart.cartContent;
         for (let productName in productQuantities) {
             let p = productQuantities[productName].product;
             let quantity = productQuantities[productName].quantity;

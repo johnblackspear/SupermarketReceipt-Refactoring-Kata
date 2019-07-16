@@ -11,15 +11,15 @@ export type ProductNameToSpecialOfferMap = { [productName: string]: Offer };
 
 export class ShoppingCart {
 
-    stock: ProductQuantities = {};
+    cartContent: ProductQuantities = {};
 
     public addItemQuantity(product: Product, quantity: number): void {
-        this.stock[product.name] = new ProductAndQuantityTuple(product, quantity);
+        this.cartContent[product.name] = new ProductAndQuantityTuple(product, quantity);
     }
 
     handleOffers(receipt: Receipt, offers: ProductNameToSpecialOfferMap, catalog: SupermarketCatalog): void {
-        for (const productName in this.stock) {
-            const product = this.stock[productName].product;
+        for (const productName in this.cartContent) {
+            const product = this.cartContent[productName].product;
             const quantity: number = this.getProductQuantity(productName);
             const productSpecificOffer: Offer = offers[productName];
 
@@ -42,7 +42,7 @@ export class ShoppingCart {
     }
 
     private getProductQuantity(productName: string) {
-        return this.stock[productName].quantity;
+        return this.cartContent[productName].quantity;
     }
 
     private twoForAmount(productOffer: Offer, product: Product, quantity: number, unitPrice: number, discount: Discount | null) {
