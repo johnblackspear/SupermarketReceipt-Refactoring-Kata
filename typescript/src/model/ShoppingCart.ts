@@ -1,6 +1,5 @@
 import {Product} from "./Product"
 import {SupermarketCatalog} from "./SupermarketCatalog"
-import * as _ from "lodash"
 import {ProductAndQuantityTuple} from "./ProductAndQuantityTuple"
 import {Discount} from "./Discount"
 import {Receipt} from "./Receipt"
@@ -15,17 +14,8 @@ export class ShoppingCart {
     private readonly items: ProductAndQuantityTuple[] = [];
     stock: ProductQuantities = {};
 
-
-    getItems(): ProductAndQuantityTuple[] {
-        return _.clone(this.items);
-    }
-
-
     public addItemQuantity(product: Product, quantity: number): void {
-        let productAndQuantityTuple = new ProductAndQuantityTuple(product, quantity);
-
-        this.items.push(productAndQuantityTuple);
-        this.stock[product.name] = productAndQuantityTuple;
+        this.stock[product.name] = new ProductAndQuantityTuple(product, quantity);
     }
 
     handleOffers(receipt: Receipt, offers: ProductNameToSpecialOfferMap, catalog: SupermarketCatalog): void {
