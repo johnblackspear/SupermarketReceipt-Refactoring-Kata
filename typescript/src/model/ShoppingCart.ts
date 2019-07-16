@@ -36,10 +36,13 @@ export class ShoppingCart {
             const productQuantity = this.stock[productName];
             const product = productQuantity.product;
             const quantity: number = this.stock[productName].quantity;
-            if (offers[productName]) {
-                const productSpecificOffer: Offer = offers[productName];
+            const productSpecificOffer: Offer = offers[productName];
+
+            if (productSpecificOffer) {
+
                 const unitPrice: number = catalog.getUnitPrice(product);
                 let discount: Discount | null = null;
+
                 discount = this.twoForAmount(quantity, productSpecificOffer, unitPrice, discount, product);
                 discount = this.threeForTwo(productSpecificOffer, quantity, unitPrice, discount, product);
                 discount = this.percentageDiscount(productSpecificOffer, discount, product, quantity, unitPrice);
