@@ -43,10 +43,10 @@ export class ShoppingCart {
                 const unitPrice: number = catalog.getUnitPrice(product);
                 let discount: Discount | null = null;
 
-                discount = this.twoForAmount(quantity, productSpecificOffer, unitPrice, discount, product);
-                discount = this.threeForTwo(productSpecificOffer, quantity, unitPrice, discount, product);
-                discount = this.percentageDiscount(productSpecificOffer, discount, product, quantity, unitPrice);
-                discount = this.fiveForAmount(productSpecificOffer, quantity, unitPrice, discount, product);
+                discount = this.twoForAmount(productSpecificOffer, product, quantity, unitPrice, discount);
+                discount = this.threeForTwo(productSpecificOffer, product, quantity, unitPrice, discount);
+                discount = this.percentageDiscount(productSpecificOffer, product, quantity, unitPrice, discount);
+                discount = this.fiveForAmount(productSpecificOffer, product, quantity, unitPrice, discount);
 
                 if (discount != null) {
                     receipt.addDiscount(discount);
@@ -56,35 +56,35 @@ export class ShoppingCart {
         }
     }
 
-    private twoForAmount(quantity: number, offer: Offer, unitPrice: number, discount: Discount | null, product: Product) {
-        if (offer.offerType == SpecialOfferType.TwoForAmount && quantity >= 2) {
+    private twoForAmount(productOffer: Offer, product: Product, quantity: number, unitPrice: number, discount: Discount | null) {
+        if (productOffer.offerType == SpecialOfferType.TwoForAmount && quantity >= 2) {
             const x: number = 2;
-            const total = offer.argument * Math.floor(quantity / x) + quantity % 2 * unitPrice;
+            const total = productOffer.argument * Math.floor(quantity / x) + quantity % 2 * unitPrice;
             const discountN = unitPrice * quantity - total;
-            discount = new Discount(product, "2 for " + offer.argument, discountN);
+            discount = new Discount(product, "2 for " + productOffer.argument, discountN);
         }
         return discount;
     }
 
-    private fiveForAmount(offer: Offer, quantity: number, unitPrice: number, discount: Discount | null, product: Product) {
-        if (offer.offerType == SpecialOfferType.FiveForAmount && quantity >= 5) {
+    private fiveForAmount(productOffer: Offer, product: Product, quantity: number, unitPrice: number, discount: Discount | null) {
+        if (productOffer.offerType == SpecialOfferType.FiveForAmount && quantity >= 5) {
             const x: number = 5;
             const numberOfXs = Math.floor(quantity / x);
-            const discountTotal = unitPrice * quantity - (offer.argument * numberOfXs + quantity % 5 * unitPrice);
-            discount = new Discount(product, x + " for " + offer.argument, discountTotal);
+            const discountTotal = unitPrice * quantity - (productOffer.argument * numberOfXs + quantity % 5 * unitPrice);
+            discount = new Discount(product, x + " for " + productOffer.argument, discountTotal);
         }
         return discount;
     }
 
-    private percentageDiscount(offer: Offer, discount: Discount | null, product: Product, quantity: number, unitPrice: number) {
-        if (offer.offerType == SpecialOfferType.PercentageDiscount) {
-            discount = new Discount(product, offer.argument + "% off", quantity * unitPrice * offer.argument / 100.0);
+    private percentageDiscount(productOffer: Offer, product: Product, quantity: number, unitPrice: number, discount: Discount | null) {
+        if (productOffer.offerType == SpecialOfferType.PercentageDiscount) {
+            discount = new Discount(product, productOffer.argument + "% off", quantity * unitPrice * productOffer.argument / 100.0);
         }
         return discount;
     }
 
-    private threeForTwo(offer: Offer, quantity: number, unitPrice: number, discount: Discount | null, product: Product) {
-        if (offer.offerType == SpecialOfferType.ThreeForTwo && quantity > 2) {
+    private threeForTwo(productOffer: Offer, product: Product, quantity: number, unitPrice: number, discount: Discount | null) {
+        if (productOffer.offerType == SpecialOfferType.ThreeForTwo && quantity > 2) {
             const x: number = 3;
             const numberOfXs = Math.floor(quantity / x);
             const discountAmount = quantity * unitPrice - ((numberOfXs * 2 * unitPrice) + quantity % 3 * unitPrice);
