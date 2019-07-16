@@ -37,28 +37,30 @@ export class ShoppingCart {
             const product = productQuantity.product;
             const quantity: number = this.stock[productName].quantity;
             if (offers[productName]) {
-                const offer: Offer = offers[productName];
+                const productSpecificOffer: Offer = offers[productName];
                 const unitPrice: number = catalog.getUnitPrice(product);
                 let discount: Discount | null = null;
                 let x = 1;
-                if (offer.offerType == SpecialOfferType.ThreeForTwo) {
+                if (productSpecificOffer.offerType == SpecialOfferType.ThreeForTwo) {
                     x = 3;
 
                 }
-                if (offer.offerType == SpecialOfferType.TwoForAmount) {
+                if (productSpecificOffer.offerType == SpecialOfferType.TwoForAmount) {
                     x = 2;
 
                 }
-                if (offer.offerType == SpecialOfferType.FiveForAmount) {
+                if (productSpecificOffer.offerType == SpecialOfferType.FiveForAmount) {
                     x = 5;
                 }
                 const numberOfXs = Math.floor(quantity / x);
-                discount = this.twoForAmount(quantity, offer, x, unitPrice, discount, product);
-                discount = this.threeForTwo(offer, quantity, unitPrice, numberOfXs, discount, product);
-                discount = this.percentageDiscount(offer, discount, product, quantity, unitPrice);
-                discount = this.fiveForAmount(offer, quantity, unitPrice, numberOfXs, discount, product, x);
-                if (discount != null)
+                discount = this.twoForAmount(quantity, productSpecificOffer, x, unitPrice, discount, product);
+                discount = this.threeForTwo(productSpecificOffer, quantity, unitPrice, numberOfXs, discount, product);
+                discount = this.percentageDiscount(productSpecificOffer, discount, product, quantity, unitPrice);
+                discount = this.fiveForAmount(productSpecificOffer, quantity, unitPrice, numberOfXs, discount, product, x);
+
+                if (discount != null) {
                     receipt.addDiscount(discount);
+                }
             }
 
         }
