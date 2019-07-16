@@ -44,7 +44,7 @@ describe('Supermarket', function () {
         const expectedPrice = ricePrice * (1 - discountPercentage / 100);
 
         catalog.addProduct(rice, ricePrice);
-        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, rice, discountPercentage);
+        teller.addSpecialOffer(SpecialOfferType.PercentageDiscount, rice, discountPercentage);
         cart.addItemQuantity(rice, 1);
         receipt = teller.checksOutArticlesFrom(cart);
 
@@ -56,7 +56,7 @@ describe('Supermarket', function () {
         const expectedPrice = applePrice * (1 - discountPercentage / 100);
 
         catalog.addProduct(apples, applePrice);
-        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, apples, discountPercentage);
+        teller.addSpecialOffer(SpecialOfferType.PercentageDiscount, apples, discountPercentage);
         cart.addItemQuantity(apples, 1);
         receipt = teller.checksOutArticlesFrom(cart);
 
@@ -72,7 +72,7 @@ describe('Supermarket', function () {
         catalog.addProduct(toothPaste, toothPastePrice);
         catalog.addProduct(apples, applePrice);
         teller.addSpecialOffer(SpecialOfferType.FiveForAmount, toothPaste, 7.49);
-        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, apples, discountPercentage);
+        teller.addSpecialOffer(SpecialOfferType.PercentageDiscount, apples, discountPercentage);
 
         cart.addItemQuantity(toothPaste, 7);
         cart.addItemQuantity(apples, 2);
@@ -110,7 +110,7 @@ describe('Supermarket', function () {
         teller.addSpecialOffer(SpecialOfferType.TwoForAmount, tomatoes, expectedPrice);
         cart.addItemQuantity(tomatoes, 2);
         receipt = teller.checksOutArticlesFrom(cart);
-        
+
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
 });

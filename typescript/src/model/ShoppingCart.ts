@@ -58,7 +58,7 @@ export class ShoppingCart {
                 }
                 const numberOfXs = Math.floor(quantity / x);
                 discount = this.threeForTwo(offer, quantity, unitPrice, numberOfXs, discount, product);
-                if (offer.offerType == SpecialOfferType.TenPercentDiscount) {
+                if (offer.offerType == SpecialOfferType.PercentageDiscount) {
                     discount = new Discount(product, offer.argument + "% off", quantity * unitPrice * offer.argument / 100.0);
                 }
                 if (offer.offerType == SpecialOfferType.FiveForAmount && quantity >= 5) {
