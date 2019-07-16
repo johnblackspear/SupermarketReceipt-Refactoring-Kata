@@ -15,6 +15,9 @@ describe('Supermarket', function () {
     const rice: Product = new Product("Bag of Rice", ProductUnit.Each);
     const ricePrice: number = 2.49;
 
+    const tomatoes: Product = new Product("Box of Cherry Tomatoes", ProductUnit.Each);
+    const tomatoPrice: number = 0.69;
+
     const toothbrush: Product = new Product("Toothbrush", ProductUnit.Each);
     const toothbrushPrice: number = 0.99;
 
@@ -77,6 +80,21 @@ describe('Supermarket', function () {
         catalog.addProduct(toothPaste, toothPastePrice);
         teller.addSpecialOffer(SpecialOfferType.FiveForAmount, toothPaste, expectedPrice);
         cart.addItemQuantity(toothPaste, 5);
+        const receipt: Receipt = teller.checksOutArticlesFrom(cart);
+
+        expect(receipt).toMatchSnapshot();
+        expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
+    });
+
+    it('applies a Two for Amount discount', function () {
+        const expectedPrice = 0.99;
+        const catalog: SupermarketCatalog = new FakeCatalog();
+        const teller: Teller = new Teller(catalog);
+        const cart: ShoppingCart = new ShoppingCart();
+
+        catalog.addProduct(tomatoes, tomatoPrice);
+        teller.addSpecialOffer(SpecialOfferType.TwoForAmount, tomatoes, expectedPrice);
+        cart.addItemQuantity(tomatoes, 2);
         const receipt: Receipt = teller.checksOutArticlesFrom(cart);
 
         expect(receipt).toMatchSnapshot();
