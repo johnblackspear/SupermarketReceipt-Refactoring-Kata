@@ -47,13 +47,13 @@ export class ShoppingCart {
                 }
                 if (offer.offerType == SpecialOfferType.TwoForAmount) {
                     x = 2;
-                    discount = this.twoForAmount(quantity, offer, x, unitPrice, discount, product);
 
                 }
                 if (offer.offerType == SpecialOfferType.FiveForAmount) {
                     x = 5;
                 }
                 const numberOfXs = Math.floor(quantity / x);
+                discount = this.twoForAmount(quantity, offer, x, unitPrice, discount, product);
                 discount = this.threeForTwo(offer, quantity, unitPrice, numberOfXs, discount, product);
                 discount = this.percentageDiscount(offer, discount, product, quantity, unitPrice);
                 discount = this.fiveForAmount(offer, quantity, unitPrice, numberOfXs, discount, product, x);
