@@ -13,7 +13,7 @@ export type OffersByProduct = { [productName: string]: Offer };
 export class ShoppingCart {
 
     private readonly items: ProductQuantity[] = [];
-    _productQuantities: ProductQuantities = {};
+    stock: ProductQuantities = {};
 
 
     getItems(): ProductQuantity[] {
@@ -21,22 +21,21 @@ export class ShoppingCart {
     }
 
     productQuantities(): ProductQuantities {
-        return this._productQuantities;
+        return this.stock;
     }
 
 
     public addItemQuantity(product: Product, quantity: number): void {
         let productQuantity = new ProductQuantity(product, quantity);
         this.items.push(productQuantity);
-        this._productQuantities[product.name] = productQuantity;
-
+        this.stock[product.name] = productQuantity;
     }
 
     handleOffers(receipt: Receipt, offers: OffersByProduct, catalog: SupermarketCatalog): void {
         for (const productName in this.productQuantities()) {
-            const productQuantity = this._productQuantities[productName]
+            const productQuantity = this.stock[productName]
             const product = productQuantity.product;
-            const quantity: number = this._productQuantities[productName].quantity;
+            const quantity: number = this.stock[productName].quantity;
             if (offers[productName]) {
                 const offer: Offer = offers[productName];
                 const unitPrice: number = catalog.getUnitPrice(product);
