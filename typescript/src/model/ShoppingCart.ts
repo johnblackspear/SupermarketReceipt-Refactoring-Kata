@@ -20,10 +20,6 @@ export class ShoppingCart {
         return _.clone(this.items);
     }
 
-    productQuantities(): ProductQuantities {
-        return this.stock;
-    }
-
 
     public addItemQuantity(product: Product, quantity: number): void {
         let productQuantity = new ProductQuantity(product, quantity);
@@ -32,7 +28,7 @@ export class ShoppingCart {
     }
 
     handleOffers(receipt: Receipt, offers: ProductNameToSpecialOfferMap, catalog: SupermarketCatalog): void {
-        for (const productName in this.productQuantities()) {
+        for (const productName in this.stock) {
             const product = this.stock[productName].product;
             const quantity: number = this.getProductQuantity(productName);
             const productSpecificOffer: Offer = offers[productName];
