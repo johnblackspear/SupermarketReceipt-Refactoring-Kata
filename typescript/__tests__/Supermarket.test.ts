@@ -24,49 +24,50 @@ describe('Supermarket', function () {
     const toothPaste: Product = new Product("Toothpaste", ProductUnit.Each);
     const toothPastePrice: number = 1.79;
 
-    it('applies a 10% discount', function () {
+    let catalog: SupermarketCatalog;
+    let teller: Teller;
+    let cart: ShoppingCart;
+    let receipt: Receipt;
+
+    beforeEach(() => {
+        catalog = new FakeCatalog();
+        teller = new Teller(catalog);
+        cart = new ShoppingCart();
+    });
+
+    afterEach(() => {
+        expect(receipt).toMatchSnapshot();
+    });
+
+    it('applies a 10% discount', () => {
         const discountPercentage = 10;
         const expectedPrice = ricePrice * (1 - discountPercentage / 100);
-
-        const catalog: SupermarketCatalog = new FakeCatalog();
-        const teller: Teller = new Teller(catalog);
-        const cart: ShoppingCart = new ShoppingCart();
 
         catalog.addProduct(rice, ricePrice);
         teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, rice, discountPercentage);
         cart.addItemQuantity(rice, 1);
-        const receipt: Receipt = teller.checksOutArticlesFrom(cart);
+        receipt = teller.checksOutArticlesFrom(cart);
 
-        expect(receipt).toMatchSnapshot();
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
 
-    it('applies a 20% discount', function () {
+    it('applies a 20% discount', () => {
         const discountPercentage = 20;
         const expectedPrice = applePrice * (1 - discountPercentage / 100);
-
-        const catalog: SupermarketCatalog = new FakeCatalog();
-        const teller: Teller = new Teller(catalog);
-        const cart: ShoppingCart = new ShoppingCart();
 
         catalog.addProduct(apples, applePrice);
         teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, apples, discountPercentage);
         cart.addItemQuantity(apples, 1);
-        const receipt: Receipt = teller.checksOutArticlesFrom(cart);
+        receipt = teller.checksOutArticlesFrom(cart);
 
-        expect(receipt).toMatchSnapshot();
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
 
-    it('applies all discounts to a complex cart', function () {
+    it('applies all discounts to a complex cart', () => {
         const totalToothpastePrice = 7.49 + (2 * toothPastePrice);
         const discountPercentage = 20;
         const totalApplePrice = 2 * applePrice * (1 - discountPercentage / 100);
         const expectedPrice = totalToothpastePrice + totalApplePrice;
-
-        const catalog: SupermarketCatalog = new FakeCatalog();
-        const teller: Teller = new Teller(catalog);
-        const cart: ShoppingCart = new ShoppingCart();
 
         catalog.addProduct(toothPaste, toothPastePrice);
         catalog.addProduct(apples, applePrice);
@@ -75,57 +76,41 @@ describe('Supermarket', function () {
 
         cart.addItemQuantity(toothPaste, 7);
         cart.addItemQuantity(apples, 2);
-        const receipt: Receipt = teller.checksOutArticlesFrom(cart);
+        receipt = teller.checksOutArticlesFrom(cart);
 
-        expect(receipt).toMatchSnapshot();
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
 
-    it('applies a Five for Amount discount', function () {
+    it('applies a Five for Amount discount', () => {
         const expectedPrice = 7.49;
-
-        const catalog: SupermarketCatalog = new FakeCatalog();
-        const teller: Teller = new Teller(catalog);
-        const cart: ShoppingCart = new ShoppingCart();
 
         catalog.addProduct(toothPaste, toothPastePrice);
         teller.addSpecialOffer(SpecialOfferType.FiveForAmount, toothPaste, expectedPrice);
         cart.addItemQuantity(toothPaste, 5);
-        const receipt: Receipt = teller.checksOutArticlesFrom(cart);
+        receipt = teller.checksOutArticlesFrom(cart);
 
-        expect(receipt).toMatchSnapshot();
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
 
-    it('applies a Three for Two discount', function () {
+    it('applies a Three for Two discount', () => {
         const expectedPrice = toothbrushPrice * 2;
-
-        const catalog: SupermarketCatalog = new FakeCatalog();
-        const teller: Teller = new Teller(catalog);
-        const cart: ShoppingCart = new ShoppingCart();
 
         catalog.addProduct(toothbrush, toothbrushPrice);
         teller.addSpecialOffer(SpecialOfferType.ThreeForTwo, toothbrush, 0.0);
         cart.addItemQuantity(toothbrush, 3);
-        const receipt: Receipt = teller.checksOutArticlesFrom(cart);
+        receipt = teller.checksOutArticlesFrom(cart);
 
-        expect(receipt).toMatchSnapshot();
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
 
-    it('applies a Two for Amount discount', function () {
+    it('applies a Two for Amount discount', () => {
         const expectedPrice = 0.99;
-
-        const catalog: SupermarketCatalog = new FakeCatalog();
-        const teller: Teller = new Teller(catalog);
-        const cart: ShoppingCart = new ShoppingCart();
 
         catalog.addProduct(tomatoes, tomatoPrice);
         teller.addSpecialOffer(SpecialOfferType.TwoForAmount, tomatoes, expectedPrice);
         cart.addItemQuantity(tomatoes, 2);
-        const receipt: Receipt = teller.checksOutArticlesFrom(cart);
-
-        expect(receipt).toMatchSnapshot();
+        receipt = teller.checksOutArticlesFrom(cart);
+        
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
 });
