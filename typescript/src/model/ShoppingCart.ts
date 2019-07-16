@@ -57,10 +57,7 @@ export class ShoppingCart {
                     x = 5;
                 }
                 const numberOfXs = Math.floor(quantity / x);
-                if (offer.offerType == SpecialOfferType.ThreeForTwo && quantity > 2) {
-                    const discountAmount = quantity * unitPrice - ((numberOfXs * 2 * unitPrice) + quantity % 3 * unitPrice);
-                    discount = new Discount(product, "3 for 2", discountAmount);
-                }
+                discount = this.threeForTwo(offer, quantity, unitPrice, numberOfXs, discount, product);
                 if (offer.offerType == SpecialOfferType.TenPercentDiscount) {
                     discount = new Discount(product, offer.argument + "% off", quantity * unitPrice * offer.argument / 100.0);
                 }
@@ -73,5 +70,13 @@ export class ShoppingCart {
             }
 
         }
+    }
+
+    private threeForTwo(offer: Offer, quantity: number, unitPrice: number, numberOfXs: number, discount: Discount | null, product: Product) {
+        if (offer.offerType == SpecialOfferType.ThreeForTwo && quantity > 2) {
+            const discountAmount = quantity * unitPrice - ((numberOfXs * 2 * unitPrice) + quantity % 3 * unitPrice);
+            discount = new Discount(product, "3 for 2", discountAmount);
+        }
+        return discount;
     }
 }
