@@ -44,7 +44,8 @@ export class ShoppingCart {
                 if (offer.offerType == SpecialOfferType.ThreeForTwo) {
                     x = 3;
 
-                } else if (offer.offerType == SpecialOfferType.TwoForAmount) {
+                }
+                if (offer.offerType == SpecialOfferType.TwoForAmount) {
                     x = 2;
                     if (quantity >= 2) {
                         const total = offer.argument * Math.floor(quantity / x) + quantity % 2 * unitPrice;
@@ -59,15 +60,20 @@ export class ShoppingCart {
                 const numberOfXs = Math.floor(quantity / x);
                 discount = this.threeForTwo(offer, quantity, unitPrice, numberOfXs, discount, product);
                 discount = this.percentageDiscount(offer, discount, product, quantity, unitPrice);
-                if (offer.offerType == SpecialOfferType.FiveForAmount && quantity >= 5) {
-                    const discountTotal = unitPrice * quantity - (offer.argument * numberOfXs + quantity % 5 * unitPrice);
-                    discount = new Discount(product, x + " for " + offer.argument, discountTotal);
-                }
+                discount = this.fiveForAmount(offer, quantity, unitPrice, numberOfXs, discount, product, x);
                 if (discount != null)
                     receipt.addDiscount(discount);
             }
 
         }
+    }
+
+    private fiveForAmount(offer: Offer, quantity: number, unitPrice: number, numberOfXs: number, discount: Discount | null, product: Product, x: number) {
+        if (offer.offerType == SpecialOfferType.FiveForAmount && quantity >= 5) {
+            const discountTotal = unitPrice * quantity - (offer.argument * numberOfXs + quantity % 5 * unitPrice);
+            discount = new Discount(product, x + " for " + offer.argument, discountTotal);
+        }
+        return discount;
     }
 
     private percentageDiscount(offer: Offer, discount: Discount | null, product: Product, quantity: number, unitPrice: number) {
