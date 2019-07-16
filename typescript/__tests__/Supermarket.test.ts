@@ -9,8 +9,11 @@ import {Receipt} from "../src/model/Receipt";
 
 describe('Supermarket', function () {
 
-    const apples: Product = new Product("Apples", ProductUnit.Kilo);
+    const apples: Product = new Product("Apples, Kilo", ProductUnit.Kilo);
     const applePrice: number = 1.99;
+
+    const rice: Product = new Product("Bag of Rice", ProductUnit.Each);
+    const ricePrice: number = 2.49;
 
     const toothbrush: Product = new Product("Toothbrush", ProductUnit.Each);
     const toothbrushPrice: number = 0.99;
@@ -38,7 +41,7 @@ describe('Supermarket', function () {
         const cart: ShoppingCart = new ShoppingCart();
 
         catalog.addProduct(apples, applePrice);
-        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, apples, 20.0);
+        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, apples, discountPercentage);
         cart.addItemQuantity(apples, 1);
         const receipt: Receipt = teller.checksOutArticlesFrom(cart);
 
@@ -46,4 +49,19 @@ describe('Supermarket', function () {
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
 
+    it('applies a 10% discount', function () {
+        const discountPercentage = 10;
+        const expectedPrice = ricePrice * (1 - discountPercentage / 100);
+        const catalog: SupermarketCatalog = new FakeCatalog();
+        const teller: Teller = new Teller(catalog);
+        const cart: ShoppingCart = new ShoppingCart();
+
+        catalog.addProduct(rice, ricePrice);
+        teller.addSpecialOffer(SpecialOfferType.TenPercentDiscount, rice, discountPercentage);
+        cart.addItemQuantity(rice, 1);
+        const receipt: Receipt = teller.checksOutArticlesFrom(cart);
+
+        expect(receipt).toMatchSnapshot();
+        expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
+    });
 });
