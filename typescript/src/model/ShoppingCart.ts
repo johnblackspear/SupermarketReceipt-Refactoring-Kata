@@ -1,30 +1,31 @@
 import {Product} from "./Product"
 import {SupermarketCatalog} from "./SupermarketCatalog"
 import * as _ from "lodash"
-import {ProductQuantity} from "./ProductQuantity"
+import {ProductAndQuantityTuple} from "./ProductAndQuantityTuple"
 import {Discount} from "./Discount"
 import {Receipt} from "./Receipt"
 import {Offer} from "./Offer"
 import {SpecialOfferType} from "./SpecialOfferType"
 
-type ProductQuantities = { [productName: string]: ProductQuantity }
+type ProductQuantities = { [productName: string]: ProductAndQuantityTuple }
 export type ProductNameToSpecialOfferMap = { [productName: string]: Offer };
 
 export class ShoppingCart {
 
-    private readonly items: ProductQuantity[] = [];
+    private readonly items: ProductAndQuantityTuple[] = [];
     stock: ProductQuantities = {};
 
 
-    getItems(): ProductQuantity[] {
+    getItems(): ProductAndQuantityTuple[] {
         return _.clone(this.items);
     }
 
 
     public addItemQuantity(product: Product, quantity: number): void {
-        let productQuantity = new ProductQuantity(product, quantity);
-        this.items.push(productQuantity);
-        this.stock[product.name] = productQuantity;
+        let productAndQuantityTuple = new ProductAndQuantityTuple(product, quantity);
+
+        this.items.push(productAndQuantityTuple);
+        this.stock[product.name] = productAndQuantityTuple;
     }
 
     handleOffers(receipt: Receipt, offers: ProductNameToSpecialOfferMap, catalog: SupermarketCatalog): void {
