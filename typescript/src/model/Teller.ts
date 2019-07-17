@@ -27,7 +27,7 @@ export class Teller {
             let price = quantity * unitPrice;
             receipt.addProduct(p, quantity, unitPrice, price);
         }
-        theCart.handleOffers(receipt, this.offers, this.catalog);
+        theCart.addDiscountsToReceipt(receipt, this.offers, this.catalog);
 
         return receipt;
     }

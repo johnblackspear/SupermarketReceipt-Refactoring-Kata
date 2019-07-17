@@ -17,7 +17,7 @@ export class ShoppingCart {
         this.cartContent[product.name] = new ProductAndQuantityTuple(product, quantity);
     }
 
-    handleOffers(receipt: Receipt, offers: ProductNameToSpecialOfferMap, catalog: SupermarketCatalog): void {
+    addDiscountsToReceipt(receipt: Receipt, offers: ProductNameToSpecialOfferMap, catalog: SupermarketCatalog): void {
         for (const productName in this.cartContent) {
             const productAndQuantityTuple = this.cartContent[productName];
             const productSpecificOffer: Offer = offers[productName];
