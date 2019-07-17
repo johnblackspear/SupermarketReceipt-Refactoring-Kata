@@ -17,58 +17,58 @@ export class ShoppingCart {
         this.cartContent[product.name] = new ProductAndQuantityTuple(product, quantity);
     }
 
-    addDiscountsToReceipt(receipt: Receipt, offers: ProductNameToSpecialOfferMap, catalog: SupermarketCatalog): void {
+    addDiscountsToReceipt(receipt: Receipt, specialOffers: ProductNameToSpecialOfferMap, catalog: SupermarketCatalog): void {
         for (const productName in this.cartContent) {
             const productAndQuantityTuple = this.cartContent[productName];
-            const productSpecificOffer: Offer = offers[productName];
 
-            if (productSpecificOffer) {
+            const unitPrice: number = catalog.getUnitPrice(productAndQuantityTuple.product);
+            let discount: Discount | null = null;
 
-                const unitPrice: number = catalog.getUnitPrice(productAndQuantityTuple.product);
-                let discount: Discount | null = null;
+            discount = this.twoForAmount(specialOffers, productAndQuantityTuple, unitPrice, discount);
+            discount = this.threeForTwo(specialOffers, productAndQuantityTuple, unitPrice, discount);
+            discount = this.percentageDiscount(specialOffers, productAndQuantityTuple, unitPrice, discount);
+            discount = this.fiveForAmount(specialOffers, productAndQuantityTuple, unitPrice, discount);
 
-                discount = this.twoForAmount(productSpecificOffer, productAndQuantityTuple, unitPrice, discount);
-                discount = this.threeForTwo(productSpecificOffer, productAndQuantityTuple, unitPrice, discount);
-                discount = this.percentageDiscount(productSpecificOffer, productAndQuantityTuple, unitPrice, discount);
-                discount = this.fiveForAmount(productSpecificOffer, productAndQuantityTuple, unitPrice, discount);
-
-                if (discount != null) {
-                    receipt.addDiscount(discount);
-                }
+            if (discount != null) {
+                receipt.addDiscount(discount);
             }
 
         }
     }
 
-    private twoForAmount(productOffer: Offer, productAndQuantityTuple: ProductAndQuantityTuple, unitPrice: number, discount: Discount | null) {
-        if (productOffer.offerType == SpecialOfferType.TwoForAmount && productAndQuantityTuple.quantity >= 2) {
+    private twoForAmount(specialOfferMap: ProductNameToSpecialOfferMap, productAndQuantityTuple: ProductAndQuantityTuple, unitPrice: number, discount: Discount | null) {
+        const specificSpecialOffer: Offer = specialOfferMap[productAndQuantityTuple.product.name];
+        if (specificSpecialOffer.offerType == SpecialOfferType.TwoForAmount && productAndQuantityTuple.quantity >= 2) {
             const x: number = 2;
-            const total = productOffer.argument * Math.floor(productAndQuantityTuple.quantity / x) + productAndQuantityTuple.quantity % 2 * unitPrice;
+            const total = specificSpecialOffer.argument * Math.floor(productAndQuantityTuple.quantity / x) + productAndQuantityTuple.quantity % 2 * unitPrice;
             const discountN = unitPrice * productAndQuantityTuple.quantity - total;
-            discount = new Discount(productAndQuantityTuple.product, "2 for " + productOffer.argument, discountN);
+            discount = new Discount(productAndQuantityTuple.product, "2 for " + specificSpecialOffer.argument, discountN);
         }
         return discount;
     }
 
-    private fiveForAmount(productOffer: Offer, productAndQuantityTuple: ProductAndQuantityTuple, unitPrice: number, discount: Discount | null) {
-        if (productOffer.offerType == SpecialOfferType.FiveForAmount && productAndQuantityTuple.quantity >= 5) {
+    private fiveForAmount(specialOfferMap: ProductNameToSpecialOfferMap, productAndQuantityTuple: ProductAndQuantityTuple, unitPrice: number, discount: Discount | null) {
+        const specificSpecialOffer: Offer = specialOfferMap[productAndQuantityTuple.product.name];
+        if (specificSpecialOffer.offerType == SpecialOfferType.FiveForAmount && productAndQuantityTuple.quantity >= 5) {
             const x: number = 5;
             const numberOfXs = Math.floor(productAndQuantityTuple.quantity / x);
-            const discountTotal = unitPrice * productAndQuantityTuple.quantity - (productOffer.argument * numberOfXs + productAndQuantityTuple.quantity % 5 * unitPrice);
-            discount = new Discount(productAndQuantityTuple.product, x + " for " + productOffer.argument, discountTotal);
+            const discountTotal = unitPrice * productAndQuantityTuple.quantity - (specificSpecialOffer.argument * numberOfXs + productAndQuantityTuple.quantity % 5 * unitPrice);
+            discount = new Discount(productAndQuantityTuple.product, x + " for " + specificSpecialOffer.argument, discountTotal);
         }
         return discount;
     }
 
-    private percentageDiscount(productOffer: Offer, productAndQuantityTuple: ProductAndQuantityTuple, unitPrice: number, discount: Discount | null) {
-        if (productOffer.offerType == SpecialOfferType.PercentageDiscount) {
-            discount = new Discount(productAndQuantityTuple.product, productOffer.argument + "% off", productAndQuantityTuple.quantity * unitPrice * productOffer.argument / 100.0);
+    private percentageDiscount(specialOfferMap: ProductNameToSpecialOfferMap, productAndQuantityTuple: ProductAndQuantityTuple, unitPrice: number, discount: Discount | null) {
+        const specificSpecialOffer: Offer = specialOfferMap[productAndQuantityTuple.product.name];
+        if (specificSpecialOffer.offerType == SpecialOfferType.PercentageDiscount) {
+            discount = new Discount(productAndQuantityTuple.product, specificSpecialOffer.argument + "% off", productAndQuantityTuple.quantity * unitPrice * specificSpecialOffer.argument / 100.0);
         }
         return discount;
     }
 
-    private threeForTwo(productOffer: Offer, productAndQuantityTuple: ProductAndQuantityTuple, unitPrice: number, discount: Discount | null) {
-        if (productOffer.offerType == SpecialOfferType.ThreeForTwo && productAndQuantityTuple.quantity > 2) {
+    private threeForTwo(specialOfferMap: ProductNameToSpecialOfferMap, productAndQuantityTuple: ProductAndQuantityTuple, unitPrice: number, discount: Discount | null) {
+        const specificSpecialOffer: Offer = specialOfferMap[productAndQuantityTuple.product.name];
+        if (specificSpecialOffer.offerType == SpecialOfferType.ThreeForTwo && productAndQuantityTuple.quantity > 2) {
             const x: number = 3;
             const numberOfXs = Math.floor(productAndQuantityTuple.quantity / x);
             const discountAmount = productAndQuantityTuple.quantity * unitPrice - ((numberOfXs * 2 * unitPrice) + productAndQuantityTuple.quantity % 3 * unitPrice);
