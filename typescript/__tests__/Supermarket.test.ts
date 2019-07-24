@@ -5,10 +5,10 @@ import {ProductUnit} from "../src/model/product/ProductUnit"
 import {ShoppingCart} from "../src/model/cart/ShoppingCart";
 import {Teller} from "../src/model/Teller";
 import {Receipt} from "../src/model/receipt/Receipt";
-import TwoForAmountOffer from "../src/model/specialOffer/TwoForAmountOffer";
 import FiveForAmount from "../src/model/specialOffer/FiveForAmount";
 import ThreeForTwo from "../src/model/specialOffer/ThreeForTwo";
 import PercentageOff from "../src/model/specialOffer/PercentageOff";
+import TwoForAmountOffer from "../src/model/specialOffer/TwoForAmountOffer";
 
 describe('Supermarket', function () {
 
@@ -115,5 +115,15 @@ describe('Supermarket', function () {
         receipt = teller.checksOutArticlesFrom(cart);
 
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
+    });
+
+    it('does not apply unused discounts', () => {
+        catalog.addProduct(tomatoes, tomatoPrice);
+        catalog.addProduct(toothbrush, toothbrushPrice);
+        teller.addSpecialOffer(new ThreeForTwo(toothbrush, 0.0));
+        cart.addItemQuantity(tomatoes, 2);
+        receipt = teller.checksOutArticlesFrom(cart);
+
+        expect(receipt.getTotalPrice()).toBeCloseTo(tomatoPrice * 2);
     });
 });

@@ -25,9 +25,18 @@ export class Teller {
             let price = quantity * unitPrice;
             receipt.addProduct(p, quantity, unitPrice, price);
         }
-        theCart.addDiscountsToReceipt(receipt, this.offers, this.catalog);
+        Teller.addDiscountsToReceipt(theCart, receipt, this.offers, this.catalog);
 
         return receipt;
+    }
+
+    private static addDiscountsToReceipt(cart: ShoppingCart, receipt: Receipt, specialOffers: Offer[], catalog: SupermarketCatalog): void {
+
+        for (const offer of specialOffers) {
+            if (offer.applies(cart)) {
+                receipt.addDiscount(offer.getDiscount(cart, catalog));
+            }
+        }
     }
 
 }
