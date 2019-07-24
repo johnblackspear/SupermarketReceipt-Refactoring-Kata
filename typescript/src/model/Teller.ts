@@ -1,9 +1,7 @@
 import {SupermarketCatalog} from "./SupermarketCatalog"
 import {ShoppingCart} from "./cart/ShoppingCart"
-import {Product} from "./product/Product"
 import {Receipt} from "./receipt/Receipt"
 import {Offer} from "./specialOffer/Offer"
-import {SpecialOfferType} from "./specialOffer/SpecialOfferType"
 
 export class Teller {
 
@@ -12,8 +10,8 @@ export class Teller {
     public constructor(private readonly catalog: SupermarketCatalog) {
     }
 
-    public addSpecialOffer(offerType: SpecialOfferType, product: Product, argument: number): void {
-        this.offers.push(new Offer(offerType, product, argument));
+    public addSpecialOffer(offer: Offer): void {
+        this.offers.push(offer);
     }
 
     public checksOutArticlesFrom(theCart: ShoppingCart): Receipt {

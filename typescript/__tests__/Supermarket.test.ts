@@ -6,6 +6,10 @@ import {ShoppingCart} from "../src/model/cart/ShoppingCart";
 import {Teller} from "../src/model/Teller";
 import {SpecialOfferType} from "../src/model/specialOffer/SpecialOfferType";
 import {Receipt} from "../src/model/receipt/Receipt";
+import TwoForAmountOffer from "../src/model/specialOffer/TwoForAmountOffer";
+import FiveForAmount from "../src/model/specialOffer/FiveForAmount";
+import ThreeForTwo from "../src/model/specialOffer/ThreeForTwo";
+import PercentageOff from "../src/model/specialOffer/PercentageOff";
 
 describe('Supermarket', function () {
 
@@ -44,7 +48,7 @@ describe('Supermarket', function () {
         const expectedPrice = ricePrice * (1 - discountPercentage / 100);
 
         catalog.addProduct(rice, ricePrice);
-        teller.addSpecialOffer(SpecialOfferType.PercentageDiscount, rice, discountPercentage);
+        teller.addSpecialOffer(new PercentageOff(SpecialOfferType.PercentageDiscount, rice, discountPercentage));
         cart.addItemQuantity(rice, 1);
         receipt = teller.checksOutArticlesFrom(cart);
 
@@ -56,7 +60,7 @@ describe('Supermarket', function () {
         const expectedPrice = applePrice * (1 - discountPercentage / 100);
 
         catalog.addProduct(apples, applePrice);
-        teller.addSpecialOffer(SpecialOfferType.PercentageDiscount, apples, discountPercentage);
+        teller.addSpecialOffer(new PercentageOff(SpecialOfferType.PercentageDiscount, apples, discountPercentage));
         cart.addItemQuantity(apples, 1);
         receipt = teller.checksOutArticlesFrom(cart);
 
@@ -71,8 +75,8 @@ describe('Supermarket', function () {
 
         catalog.addProduct(toothPaste, toothPastePrice);
         catalog.addProduct(apples, applePrice);
-        teller.addSpecialOffer(SpecialOfferType.FiveForAmount, toothPaste, 7.49);
-        teller.addSpecialOffer(SpecialOfferType.PercentageDiscount, apples, discountPercentage);
+        teller.addSpecialOffer(new FiveForAmount(SpecialOfferType.FiveForAmount, toothPaste, 7.49));
+        teller.addSpecialOffer(new PercentageOff(SpecialOfferType.PercentageDiscount, apples, discountPercentage));
 
         cart.addItemQuantity(toothPaste, 7);
         cart.addItemQuantity(apples, 2);
@@ -85,7 +89,7 @@ describe('Supermarket', function () {
         const expectedPrice = 7.49;
 
         catalog.addProduct(toothPaste, toothPastePrice);
-        teller.addSpecialOffer(SpecialOfferType.FiveForAmount, toothPaste, expectedPrice);
+        teller.addSpecialOffer(new FiveForAmount(SpecialOfferType.FiveForAmount, toothPaste, expectedPrice));
         cart.addItemQuantity(toothPaste, 5);
         receipt = teller.checksOutArticlesFrom(cart);
 
@@ -96,7 +100,7 @@ describe('Supermarket', function () {
         const expectedPrice = toothbrushPrice * 2;
 
         catalog.addProduct(toothbrush, toothbrushPrice);
-        teller.addSpecialOffer(SpecialOfferType.ThreeForTwo, toothbrush, 0.0);
+        teller.addSpecialOffer(new ThreeForTwo(SpecialOfferType.ThreeForTwo, toothbrush, 0.0));
         cart.addItemQuantity(toothbrush, 3);
         receipt = teller.checksOutArticlesFrom(cart);
 
@@ -107,7 +111,7 @@ describe('Supermarket', function () {
         const expectedPrice = 0.99;
 
         catalog.addProduct(tomatoes, tomatoPrice);
-        teller.addSpecialOffer(SpecialOfferType.TwoForAmount, tomatoes, expectedPrice);
+        teller.addSpecialOffer(new TwoForAmountOffer(SpecialOfferType.TwoForAmount, tomatoes, expectedPrice));
         cart.addItemQuantity(tomatoes, 2);
         receipt = teller.checksOutArticlesFrom(cart);
 
