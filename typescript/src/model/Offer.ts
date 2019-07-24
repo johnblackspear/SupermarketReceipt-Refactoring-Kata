@@ -1,8 +1,7 @@
-import {Product} from "../Product"
+import {Product} from "./Product"
 import {SpecialOfferType} from "./SpecialOfferType"
-import {OfferInterface} from "./OfferInterface";
 
-export class Offer implements OfferInterface {
+export class Offer {
 
     public constructor(public readonly offerType: SpecialOfferType,
                        public readonly product: Product,

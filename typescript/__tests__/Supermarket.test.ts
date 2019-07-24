@@ -4,7 +4,7 @@ import {SupermarketCatalog} from "../src/model/SupermarketCatalog"
 import {ProductUnit} from "../src/model/ProductUnit"
 import {ShoppingCart} from "../src/model/ShoppingCart";
 import {Teller} from "../src/model/Teller";
-import {SpecialOfferType} from "../src/model/specialOffer/SpecialOfferType";
+import {SpecialOfferType} from "../src/model/SpecialOfferType";
 import {Receipt} from "../src/model/Receipt";
 
 describe('Supermarket', function () {
