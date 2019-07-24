@@ -1,21 +1,15 @@
 import {Product} from "../product/Product"
-import {TempSpecialOfferInterface} from "./TempSpecialOfferInterface";
 import {ShoppingCart} from "../cart/ShoppingCart";
 import {SupermarketCatalog} from "../SupermarketCatalog";
 import {Discount} from "../Discount";
-import {ProductUnit} from "../product/ProductUnit";
 
-export class Offer implements TempSpecialOfferInterface {
+export abstract class Offer {
 
     public constructor(public readonly product: Product,
                        public readonly argument: number) {
     }
 
-    applies(cart: ShoppingCart): boolean {
-        return false;
-    }
+    public abstract applies(cart: ShoppingCart): boolean;
 
-    getDiscount(cart: ShoppingCart, catalog: SupermarketCatalog): Discount {
-        return new Discount(new Product('', ProductUnit.Each), '', 0.0);
-    }
+    public abstract getDiscount(cart: ShoppingCart, catalog: SupermarketCatalog): Discount ;
 }
