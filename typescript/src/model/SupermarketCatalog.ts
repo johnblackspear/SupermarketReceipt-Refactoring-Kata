@@ -1,4 +1,4 @@
-import {Product} from "./Product"
+import {Product} from "./product/Product"
 
 export interface SupermarketCatalog {
     addProduct(product: Product , price: number): void;

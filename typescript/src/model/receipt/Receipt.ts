@@ -1,5 +1,5 @@
-import {Discount} from "./Discount"
-import {Product} from "./Product"
+import {Discount} from "../Discount"
+import {Product} from "../product/Product"
 import {ReceiptItem} from "./ReceiptItem"
 
 export class Receipt {

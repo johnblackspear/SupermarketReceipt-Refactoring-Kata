@@ -1,4 +1,4 @@
-import {Product} from "../src/model/Product"
+import {Product} from "../src/model/product/Product"
 import {SupermarketCatalog} from "../src/model/SupermarketCatalog"
 
 export class FakeCatalog implements SupermarketCatalog {

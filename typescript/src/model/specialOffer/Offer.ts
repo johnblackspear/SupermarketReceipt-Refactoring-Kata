@@ -1,4 +1,4 @@
-import {Product} from "./Product"
+import {Product} from "../product/Product"
 import {SpecialOfferType} from "./SpecialOfferType"
 
 export class Offer {

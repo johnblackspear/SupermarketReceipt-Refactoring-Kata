@@ -1,6 +1,6 @@
-import {ProductUnit} from "./model/ProductUnit"
-import {ReceiptItem} from "./model/ReceiptItem"
-import {Receipt} from "./model/Receipt"
+import {ProductUnit} from "./model/product/ProductUnit"
+import {ReceiptItem} from "./model/receipt/ReceiptItem"
+import {Receipt} from "./model/receipt/Receipt"
 
 export class ReceiptPrinter {
 

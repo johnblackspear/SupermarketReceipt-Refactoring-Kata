@@ -1,11 +1,11 @@
 import {FakeCatalog} from "./FakeCatalog"
-import {Product} from "../src/model/Product"
+import {Product} from "../src/model/product/Product"
 import {SupermarketCatalog} from "../src/model/SupermarketCatalog"
-import {ProductUnit} from "../src/model/ProductUnit"
-import {ShoppingCart} from "../src/model/ShoppingCart";
+import {ProductUnit} from "../src/model/product/ProductUnit"
+import {ShoppingCart} from "../src/model/cart/ShoppingCart";
 import {Teller} from "../src/model/Teller";
-import {SpecialOfferType} from "../src/model/SpecialOfferType";
-import {Receipt} from "../src/model/Receipt";
+import {SpecialOfferType} from "../src/model/specialOffer/SpecialOfferType";
+import {Receipt} from "../src/model/receipt/Receipt";
 
 describe('Supermarket', function () {
 
