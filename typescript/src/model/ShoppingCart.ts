@@ -7,7 +7,6 @@ import {Offer} from "./Offer"
 import {SpecialOfferType} from "./SpecialOfferType"
 
 type ProductQuantities = { [productName: string]: ProductAndQuantityTuple }
-export type ProductNameToSpecialOfferMap = { [productName: string]: Offer };
 
 export class ShoppingCart {
 
@@ -17,15 +16,15 @@ export class ShoppingCart {
         this.cartContent[product.name] = new ProductAndQuantityTuple(product, quantity);
     }
 
-    addDiscountsToReceipt(receipt: Receipt, specialOffers: ProductNameToSpecialOfferMap, catalog: SupermarketCatalog): void {
+    addDiscountsToReceipt(receipt: Receipt, specialOffers: Offer[], catalog: SupermarketCatalog): void {
 
-        for (const specialProductName in specialOffers) {
+        for (let offer of specialOffers) {
             let discount: Discount | null = null;
 
-            discount = this.twoForAmount(specialOffers, specialProductName, catalog, discount);
-            discount = this.threeForTwo(specialOffers, specialProductName, catalog, discount);
-            discount = this.percentageDiscount(specialOffers, specialProductName, catalog, discount);
-            discount = this.fiveForAmount(specialOffers, specialProductName, catalog, discount);
+            discount = this.twoForAmount(offer, catalog, discount);
+            discount = this.threeForTwo(offer, catalog, discount);
+            discount = this.percentageDiscount(offer, catalog, discount);
+            discount = this.fiveForAmount(offer, catalog, discount);
 
             if (discount != null) {
                 receipt.addDiscount(discount);
@@ -33,49 +32,45 @@ export class ShoppingCart {
         }
     }
 
-    private twoForAmount(specialOfferMap: ProductNameToSpecialOfferMap, specialProductName: string, catalog: SupermarketCatalog, discount: Discount | null) {
+    private twoForAmount(offer: Offer, catalog: SupermarketCatalog, discount: Discount | null) {
 
-        const productAndQuantityTuple = this.cartContent[specialProductName];
-        const specificSpecialOffer: Offer = specialOfferMap[productAndQuantityTuple.product.name];
+        const productAndQuantityTuple = this.cartContent[offer.product.name];
         const unitPrice: number = catalog.getUnitPrice(productAndQuantityTuple.product);
 
-        if (specificSpecialOffer.offerType == SpecialOfferType.TwoForAmount && productAndQuantityTuple.quantity >= 2) {
+        if (offer.offerType == SpecialOfferType.TwoForAmount && productAndQuantityTuple.quantity >= 2) {
             const x: number = 2;
-            const total = specificSpecialOffer.argument * Math.floor(productAndQuantityTuple.quantity / x) + productAndQuantityTuple.quantity % 2 * unitPrice;
+            const total = offer.argument * Math.floor(productAndQuantityTuple.quantity / x) + productAndQuantityTuple.quantity % 2 * unitPrice;
             const discountN = unitPrice * productAndQuantityTuple.quantity - total;
-            discount = new Discount(productAndQuantityTuple.product, "2 for " + specificSpecialOffer.argument, discountN);
+            discount = new Discount(productAndQuantityTuple.product, "2 for " + offer.argument, discountN);
         }
         return discount;
     }
 
-    private fiveForAmount(specialOfferMap: ProductNameToSpecialOfferMap, specialProductName: string, catalog: SupermarketCatalog, discount: Discount | null) {
-        const productAndQuantityTuple = this.cartContent[specialProductName];
-        const specificSpecialOffer: Offer = specialOfferMap[productAndQuantityTuple.product.name];
+    private fiveForAmount(offer: Offer, catalog: SupermarketCatalog, discount: Discount | null) {
+        const productAndQuantityTuple = this.cartContent[offer.product.name];
         const unitPrice: number = catalog.getUnitPrice(productAndQuantityTuple.product);
-        if (specificSpecialOffer.offerType == SpecialOfferType.FiveForAmount && productAndQuantityTuple.quantity >= 5) {
+        if (offer.offerType == SpecialOfferType.FiveForAmount && productAndQuantityTuple.quantity >= 5) {
             const x: number = 5;
             const numberOfXs = Math.floor(productAndQuantityTuple.quantity / x);
-            const discountTotal = unitPrice * productAndQuantityTuple.quantity - (specificSpecialOffer.argument * numberOfXs + productAndQuantityTuple.quantity % 5 * unitPrice);
-            discount = new Discount(productAndQuantityTuple.product, x + " for " + specificSpecialOffer.argument, discountTotal);
+            const discountTotal = unitPrice * productAndQuantityTuple.quantity - (offer.argument * numberOfXs + productAndQuantityTuple.quantity % 5 * unitPrice);
+            discount = new Discount(productAndQuantityTuple.product, x + " for " + offer.argument, discountTotal);
         }
         return discount;
     }
 
-    private percentageDiscount(specialOfferMap: ProductNameToSpecialOfferMap, specialProductName: string, catalog: SupermarketCatalog, discount: Discount | null) {
-        const productAndQuantityTuple = this.cartContent[specialProductName];
-        const specificSpecialOffer: Offer = specialOfferMap[productAndQuantityTuple.product.name];
+    private percentageDiscount(offer: Offer, catalog: SupermarketCatalog, discount: Discount | null) {
+        const productAndQuantityTuple = this.cartContent[offer.product.name];
         const unitPrice: number = catalog.getUnitPrice(productAndQuantityTuple.product);
-        if (specificSpecialOffer.offerType == SpecialOfferType.PercentageDiscount) {
-            discount = new Discount(productAndQuantityTuple.product, specificSpecialOffer.argument + "% off", productAndQuantityTuple.quantity * unitPrice * specificSpecialOffer.argument / 100.0);
+        if (offer.offerType == SpecialOfferType.PercentageDiscount) {
+            discount = new Discount(productAndQuantityTuple.product, offer.argument + "% off", productAndQuantityTuple.quantity * unitPrice * offer.argument / 100.0);
         }
         return discount;
     }
 
-    private threeForTwo(specialOfferMap: ProductNameToSpecialOfferMap, specialProductName: string, catalog: SupermarketCatalog, discount: Discount | null) {
-        const productAndQuantityTuple = this.cartContent[specialProductName];
-        const specificSpecialOffer: Offer = specialOfferMap[productAndQuantityTuple.product.name];
+    private threeForTwo(offer: Offer, catalog: SupermarketCatalog, discount: Discount | null) {
+        const productAndQuantityTuple = this.cartContent[offer.product.name];
         const unitPrice: number = catalog.getUnitPrice(productAndQuantityTuple.product);
-        if (specificSpecialOffer.offerType == SpecialOfferType.ThreeForTwo && productAndQuantityTuple.quantity > 2) {
+        if (offer.offerType == SpecialOfferType.ThreeForTwo && productAndQuantityTuple.quantity > 2) {
             const x: number = 3;
             const numberOfXs = Math.floor(productAndQuantityTuple.quantity / x);
             const discountAmount = productAndQuantityTuple.quantity * unitPrice - ((numberOfXs * 2 * unitPrice) + productAndQuantityTuple.quantity % 3 * unitPrice);
