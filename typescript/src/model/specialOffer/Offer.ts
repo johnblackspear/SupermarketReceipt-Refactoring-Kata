@@ -1,5 +1,4 @@
 import {Product} from "../product/Product"
-import {SpecialOfferType} from "./SpecialOfferType"
 import {TempSpecialOfferInterface} from "./TempSpecialOfferInterface";
 import {ShoppingCart} from "../cart/ShoppingCart";
 import {SupermarketCatalog} from "../SupermarketCatalog";
@@ -8,8 +7,7 @@ import {ProductUnit} from "../product/ProductUnit";
 
 export class Offer implements TempSpecialOfferInterface {
 
-    public constructor(public readonly offerType: SpecialOfferType,
-                       public readonly product: Product,
+    public constructor(public readonly product: Product,
                        public readonly argument: number) {
     }
 
