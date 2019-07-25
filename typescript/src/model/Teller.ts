@@ -14,29 +14,37 @@ export class Teller {
         this.offers.push(offer);
     }
 
-    public checksOutArticlesFrom(theCart: ShoppingCart): Receipt {
-        const receipt = new Receipt();
-        const productQuantities = theCart.cartContent;
-        for (let productName in productQuantities) {
-            let p = productQuantities[productName].product;
-            let quantity = productQuantities[productName].quantity;
-
-            let unitPrice = this.catalog.getUnitPrice(p);
-            let price = quantity * unitPrice;
-            receipt.addProduct(p, quantity, unitPrice, price);
-        }
-        Teller.addDiscountsToReceipt(theCart, receipt, this.offers, this.catalog);
+    public getReceipt(cart: ShoppingCart): Receipt {
+        let receipt = new Receipt();
+        receipt = Teller.addProductsToReceipt(cart, receipt, this.catalog);
+        receipt = Teller.addDiscountsToReceipt(cart, receipt, this.offers, this.catalog);
 
         return receipt;
     }
 
-    private static addDiscountsToReceipt(cart: ShoppingCart, receipt: Receipt, specialOffers: Offer[], catalog: SupermarketCatalog): void {
+    private static addProductsToReceipt(cart: ShoppingCart, receipt: Receipt, catalog: SupermarketCatalog): Receipt {
+        const productQuantities = cart.cartContent;
+        for (let productName in productQuantities) {
+            let p = productQuantities[productName].product;
+            let quantity = productQuantities[productName].quantity;
 
-        for (const offer of specialOffers) {
-            if (offer.applies(cart)) {
-                receipt.addDiscount(offer.getDiscount(cart, catalog));
-            }
+            let unitPrice = catalog.getUnitPrice(p);
+            let price = quantity * unitPrice;
+            receipt.addProduct(p, quantity, unitPrice, price);
         }
+        return receipt;
+    }
+
+    private static addDiscountsToReceipt(
+        cart: ShoppingCart,
+        receipt: Receipt,
+        specialOffers: Offer[],
+        catalog: SupermarketCatalog): Receipt {
+
+        specialOffers
+            .filter(offer => offer.applies(cart))
+            .forEach(offer => receipt.addDiscount(offer.getDiscount(cart, catalog)));
+        return receipt;
     }
 
 }

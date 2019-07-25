@@ -49,7 +49,7 @@ describe('Supermarket', function () {
         catalog.addProduct(rice, ricePrice);
         teller.addSpecialOffer(new PercentageOff(rice, discountPercentage));
         cart.addItemQuantity(rice, 1);
-        receipt = teller.checksOutArticlesFrom(cart);
+        receipt = teller.getReceipt(cart);
 
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
@@ -61,7 +61,7 @@ describe('Supermarket', function () {
         catalog.addProduct(apples, applePrice);
         teller.addSpecialOffer(new PercentageOff(apples, discountPercentage));
         cart.addItemQuantity(apples, 1);
-        receipt = teller.checksOutArticlesFrom(cart);
+        receipt = teller.getReceipt(cart);
 
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
@@ -79,7 +79,7 @@ describe('Supermarket', function () {
 
         cart.addItemQuantity(toothPaste, 7);
         cart.addItemQuantity(apples, 2);
-        receipt = teller.checksOutArticlesFrom(cart);
+        receipt = teller.getReceipt(cart);
 
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
@@ -90,7 +90,7 @@ describe('Supermarket', function () {
         catalog.addProduct(toothPaste, toothPastePrice);
         teller.addSpecialOffer(new FiveForAmount(toothPaste, expectedPrice));
         cart.addItemQuantity(toothPaste, 5);
-        receipt = teller.checksOutArticlesFrom(cart);
+        receipt = teller.getReceipt(cart);
 
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
@@ -101,7 +101,7 @@ describe('Supermarket', function () {
         catalog.addProduct(toothbrush, toothbrushPrice);
         teller.addSpecialOffer(new ThreeForTwo(toothbrush, 0.0));
         cart.addItemQuantity(toothbrush, 3);
-        receipt = teller.checksOutArticlesFrom(cart);
+        receipt = teller.getReceipt(cart);
 
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
@@ -112,7 +112,7 @@ describe('Supermarket', function () {
         catalog.addProduct(tomatoes, tomatoPrice);
         teller.addSpecialOffer(new TwoForAmountOffer(tomatoes, expectedPrice));
         cart.addItemQuantity(tomatoes, 2);
-        receipt = teller.checksOutArticlesFrom(cart);
+        receipt = teller.getReceipt(cart);
 
         expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
@@ -122,7 +122,7 @@ describe('Supermarket', function () {
         catalog.addProduct(toothbrush, toothbrushPrice);
         teller.addSpecialOffer(new ThreeForTwo(toothbrush, 0.0));
         cart.addItemQuantity(tomatoes, 2);
-        receipt = teller.checksOutArticlesFrom(cart);
+        receipt = teller.getReceipt(cart);
 
         expect(receipt.getTotalPrice()).toBeCloseTo(tomatoPrice * 2);
     });
