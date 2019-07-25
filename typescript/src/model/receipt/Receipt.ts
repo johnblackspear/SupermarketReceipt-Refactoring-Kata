@@ -8,14 +8,10 @@ export class Receipt {
     private discounts: Discount[] = [];
 
     public getTotalPrice(): number {
-        let total = 0.0;
-        for (let item of this.items) {
-            total += item.totalPrice;
-        }
-        for (let discount of this.discounts) {
-            total -= discount.discountAmount;
-        }
-        return total;
+        const amounts = this.items.map(item => item.totalPrice)
+            .concat(this.discounts.map(discount => -discount.discountAmount));
+
+        return amounts.reduce((total, amount) => total + amount, 0);
     }
 
     public addProduct(productAndQuantity: ProductAndQuantityTuple, catalog: SupermarketCatalog): void {
