@@ -23,14 +23,7 @@ export class Teller {
     }
 
     private static addProductsToReceipt(cart: ShoppingCart, receipt: Receipt, catalog: SupermarketCatalog): Receipt {
-        for (let pAndQ of cart.content()) {
-            receipt.addProduct(
-                pAndQ.product,
-                pAndQ.quantity,
-                catalog.getUnitPrice(pAndQ.product),
-                pAndQ.quantity * catalog.getUnitPrice(pAndQ.product)
-            );
-        }
+        cart.content().forEach(productAndQuantity => receipt.addProduct(productAndQuantity, catalog));
         return receipt;
     }
 

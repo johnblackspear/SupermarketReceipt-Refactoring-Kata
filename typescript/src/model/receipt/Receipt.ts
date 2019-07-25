@@ -1,6 +1,7 @@
 import {Discount} from "../Discount"
-import {Product} from "../product/Product"
 import {ReceiptItem} from "./ReceiptItem"
+import {ProductAndQuantityTuple} from "../product/ProductAndQuantityTuple";
+import {SupermarketCatalog} from "../SupermarketCatalog";
 
 export class Receipt {
     private items: ReceiptItem[] = [];
@@ -17,8 +18,16 @@ export class Receipt {
         return total;
     }
 
-    public addProduct(p: Product, quantity: number, price: number, totalPrice: number): void {
-        this.items.push(new ReceiptItem(p, quantity, price, totalPrice));
+    public addProduct(productAndQuantity: ProductAndQuantityTuple, catalog: SupermarketCatalog): void {
+        const unitPrice: number = catalog.getUnitPrice(productAndQuantity.product);
+        this.items.push(
+            new ReceiptItem(
+                productAndQuantity.product,
+                productAndQuantity.quantity,
+                unitPrice,
+                unitPrice * productAndQuantity.quantity
+            )
+        );
     }
 
     public addDiscount(discount: Discount): void {
