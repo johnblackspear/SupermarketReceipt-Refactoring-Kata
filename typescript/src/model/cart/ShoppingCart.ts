@@ -1,20 +1,23 @@
 import {Product} from "../product/Product"
 import {ProductAndQuantityTuple} from "../product/ProductAndQuantityTuple"
 
-type ProductQuantities = { [productName: string]: ProductAndQuantityTuple }
-
 export class ShoppingCart {
 
-    cartContent: ProductQuantities = {};
+    cartContent: ProductAndQuantityTuple[] = [];
 
     public addItemQuantity(product: Product, quantity: number): void {
-        this.cartContent[product.name] = new ProductAndQuantityTuple(product, quantity);
+        this.cartContent.push(new ProductAndQuantityTuple(product, quantity));
     }
 
     public itemQuantity(item: Product): number {
-        if (!this.cartContent[item.name]) {
+        const productAndQuantity = this.cartContent.find(pAndQ => pAndQ.product === item);
+        if (!productAndQuantity) {
             return 0;
         }
-        return this.cartContent[item.name].quantity;
+        return productAndQuantity.quantity;
+    }
+
+    public content(): ProductAndQuantityTuple[] {
+        return this.cartContent;
     }
 }

@@ -23,14 +23,13 @@ export class Teller {
     }
 
     private static addProductsToReceipt(cart: ShoppingCart, receipt: Receipt, catalog: SupermarketCatalog): Receipt {
-        const productQuantities = cart.cartContent;
-        for (let productName in productQuantities) {
-            let p = productQuantities[productName].product;
-            let quantity = productQuantities[productName].quantity;
-
-            let unitPrice = catalog.getUnitPrice(p);
-            let price = quantity * unitPrice;
-            receipt.addProduct(p, quantity, unitPrice, price);
+        for (let pAndQ of cart.content()) {
+            receipt.addProduct(
+                pAndQ.product,
+                pAndQ.quantity,
+                catalog.getUnitPrice(pAndQ.product),
+                pAndQ.quantity * catalog.getUnitPrice(pAndQ.product)
+            );
         }
         return receipt;
     }
