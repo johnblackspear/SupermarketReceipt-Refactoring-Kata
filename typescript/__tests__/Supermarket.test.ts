@@ -135,7 +135,7 @@ describe('Supermarket', function () {
 
         const expectedPrice = (toothbrushPrice + toothPastePrice) * 0.9;
 
-        teller.addSpecialOffer(new BundlePercentageDiscount([toothbrush, toothPaste], 10));
+        teller.addSpecialOffer(new BundlePercentageDiscount([toothbrush, toothPaste], "10% off dental", 10));
 
         cart.addItemQuantity(toothbrush, 1);
         cart.addItemQuantity(toothPaste, 1);
