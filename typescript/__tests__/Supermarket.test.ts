@@ -9,6 +9,7 @@ import FiveForAmount from "../src/model/specialOffer/FiveForAmount";
 import ThreeForTwo from "../src/model/specialOffer/ThreeForTwo";
 import PercentageOff from "../src/model/specialOffer/PercentageOff";
 import TwoForAmountOffer from "../src/model/specialOffer/TwoForAmountOffer";
+import BundlePercentageDiscount from "../src/model/specialOffer/BundlePercentageDiscount";
 
 describe('Supermarket', function () {
 
@@ -99,7 +100,7 @@ describe('Supermarket', function () {
         const expectedPrice = toothbrushPrice * 2;
 
         catalog.addProduct(toothbrush, toothbrushPrice);
-        teller.addSpecialOffer(new ThreeForTwo(toothbrush, 0.0));
+        teller.addSpecialOffer(new ThreeForTwo(toothbrush));
         cart.addItemQuantity(toothbrush, 3);
         receipt = teller.getReceipt(cart);
 
@@ -120,7 +121,7 @@ describe('Supermarket', function () {
     it('does not apply unused discounts', () => {
         catalog.addProduct(tomatoes, tomatoPrice);
         catalog.addProduct(toothbrush, toothbrushPrice);
-        teller.addSpecialOffer(new ThreeForTwo(toothbrush, 0.0));
+        teller.addSpecialOffer(new ThreeForTwo(toothbrush));
         cart.addItemQuantity(tomatoes, 2);
         receipt = teller.getReceipt(cart);
 
