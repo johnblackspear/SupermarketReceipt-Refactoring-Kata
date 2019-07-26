@@ -1,16 +1,16 @@
 import {SupermarketCatalog} from "./SupermarketCatalog"
 import {ShoppingCart} from "./cart/ShoppingCart"
 import {Receipt} from "./receipt/Receipt"
-import {Offer} from "./specialOffer/Offer"
+import OfferInterface from "./specialOffer/OfferInterface";
 
 export class Teller {
 
-    private offers: Offer[] = [];
+    private offers: OfferInterface[] = [];
 
     public constructor(private readonly catalog: SupermarketCatalog) {
     }
 
-    public addSpecialOffer(offer: Offer): void {
+    public addSpecialOffer(offer: OfferInterface): void {
         this.offers.push(offer);
     }
 
@@ -33,7 +33,7 @@ export class Teller {
     private static addDiscountsToReceipt(
         cart: ShoppingCart,
         receipt: Receipt,
-        specialOffers: Offer[],
+        specialOffers: OfferInterface[],
         catalog: SupermarketCatalog): Receipt {
 
         specialOffers

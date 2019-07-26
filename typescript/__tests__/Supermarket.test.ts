@@ -9,6 +9,7 @@ import FiveForAmount from "../src/model/specialOffer/FiveForAmount";
 import ThreeForTwo from "../src/model/specialOffer/ThreeForTwo";
 import PercentageOff from "../src/model/specialOffer/PercentageOff";
 import TwoForAmountOffer from "../src/model/specialOffer/TwoForAmountOffer";
+import BundlePercentageDiscount from "../src/model/specialOffer/BundlePercentageDiscount";
 
 describe('Supermarket', function () {
 
@@ -99,7 +100,7 @@ describe('Supermarket', function () {
         const expectedPrice = toothbrushPrice * 2;
 
         catalog.addProduct(toothbrush, toothbrushPrice);
-        teller.addSpecialOffer(new ThreeForTwo(toothbrush, 0.0));
+        teller.addSpecialOffer(new ThreeForTwo(toothbrush));
         cart.addItemQuantity(toothbrush, 3);
         receipt = teller.getReceipt(cart);
 
@@ -120,10 +121,27 @@ describe('Supermarket', function () {
     it('does not apply unused discounts', () => {
         catalog.addProduct(tomatoes, tomatoPrice);
         catalog.addProduct(toothbrush, toothbrushPrice);
-        teller.addSpecialOffer(new ThreeForTwo(toothbrush, 0.0));
+        teller.addSpecialOffer(new ThreeForTwo(toothbrush));
         cart.addItemQuantity(tomatoes, 2);
         receipt = teller.getReceipt(cart);
 
         expect(receipt.getTotalPrice()).toBeCloseTo(tomatoPrice * 2);
+    });
+
+    it('applies a bundle discount', () => {
+
+        catalog.addProduct(toothbrush, toothbrushPrice);
+        catalog.addProduct(toothPaste, toothPastePrice);
+
+        const expectedPrice = (toothbrushPrice + toothPastePrice) * 0.9;
+
+        teller.addSpecialOffer(new BundlePercentageDiscount([toothbrush, toothPaste], "10% off dental", 10));
+
+        cart.addItemQuantity(toothbrush, 1);
+        cart.addItemQuantity(toothPaste, 1);
+
+        receipt = teller.getReceipt(cart);
+
+        expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
     });
 });

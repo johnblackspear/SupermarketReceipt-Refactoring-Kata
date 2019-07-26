@@ -1,9 +1,13 @@
-import {Offer} from "./Offer";
 import {ShoppingCart} from "../cart/ShoppingCart";
 import {Discount} from "../Discount";
 import {SupermarketCatalog} from "../SupermarketCatalog";
+import {Product} from "../product/Product";
+import OfferInterface from "./OfferInterface";
 
-export default class ThreeForTwo extends Offer {
+export default class ThreeForTwo implements OfferInterface {
+
+    public constructor(public readonly product: Product) {
+    }
 
     public applies(cart: ShoppingCart): boolean {
         return cart.itemQuantity(this.product) >= 3;
