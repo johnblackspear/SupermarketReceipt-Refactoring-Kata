@@ -5,7 +5,7 @@ import {Discount} from "../Discount";
 
 export abstract class Offer {
 
-    public constructor(public readonly product: Product,
+    public constructor(public readonly products: Product[],
                        public readonly argument: number) {
     }
 

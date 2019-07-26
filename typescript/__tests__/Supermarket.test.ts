@@ -126,4 +126,21 @@ describe('Supermarket', function () {
 
         expect(receipt.getTotalPrice()).toBeCloseTo(tomatoPrice * 2);
     });
+
+    it('applies a bundle discount', () => {
+
+        catalog.addProduct(toothbrush, toothbrushPrice);
+        catalog.addProduct(toothPaste, toothPastePrice);
+
+        const expectedPrice = (toothbrushPrice + toothPastePrice) * 0.9;
+
+        teller.addSpecialOffer(new BundlePercentageDiscount([toothbrush, toothPaste], 10));
+
+        cart.addItemQuantity(toothbrush, 1);
+        cart.addItemQuantity(toothPaste, 1);
+
+        receipt = teller.getReceipt(cart);
+
+        expect(receipt.getTotalPrice()).toBeCloseTo(expectedPrice);
+    });
 });
