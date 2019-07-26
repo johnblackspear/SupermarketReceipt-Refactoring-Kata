@@ -22,7 +22,10 @@ export class Teller {
         return receipt;
     }
 
-    private static addProductsToReceipt(cart: ShoppingCart, receipt: Receipt, catalog: SupermarketCatalog): Receipt {
+    private static addProductsToReceipt(
+        cart: ShoppingCart,
+        receipt: Receipt,
+        catalog: SupermarketCatalog): Receipt {
         cart.content().forEach(productAndQuantity => receipt.addProduct(productAndQuantity, catalog));
         return receipt;
     }
